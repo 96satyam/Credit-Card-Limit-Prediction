@@ -51,7 +51,47 @@ class ModelTrainer:
                 "AdaBoost Regressor": AdaBoostRegressor(),
             }
 
-            model_report: dict = evaluate_models(X_train =X_train, y_train = y_train, X_test = X_test, y_test = y_test, models = models)
+            params = {
+    "Random Forest": {
+        "n_estimators": [100],
+        "max_depth": [None],
+        "min_samples_split": [2],
+    },
+    "Decision Tree": {
+        "max_depth": [None],
+        "min_samples_split": [2],
+    },
+    "Gradient Boosting": {
+        "n_estimators": [100],
+        "learning_rate": [0.1],
+        "max_depth": [3],
+    },
+    "Linear Regression": {
+        # No hyperparameters to tune normally, leave empty
+    },
+    "K-Neighbors Classifier": {
+        "n_neighbors": [5],
+        "weights": ["uniform"],
+    },
+    "XGBRegressor": {
+        "n_estimators": [100],
+        "learning_rate": [0.1],
+        "max_depth": [3],
+    },
+    "CatBoosting Regressor": {
+        "iterations": [100],
+        "learning_rate": [0.1],
+        "depth": [3],
+    },
+    "AdaBoost Regressor": {
+        "n_estimators": [50],
+        "learning_rate": [1.0],
+    },
+}
+
+
+
+            model_report: dict = evaluate_models(X_train =X_train, y_train = y_train, X_test = X_test, y_test = y_test, models = models, params =params )
 
             # Best model score
 
