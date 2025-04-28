@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Credit Limit Predictor</title>
+    <style>
+        body {
+            background: linear-gradient(to right, #83a4d4, #b6fbff);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background-color: white;
+            padding: 40px 30px;
+            border-radius: 15px;
+            box-shadow: 0px 8px 20px rgba(0,0,0,0.2);
+            width: 100%;
+            max-width: 600px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        h2 {
+            color: #555;
+            margin-bottom: 15px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 6px;
+            color: #555;
+            font-weight: bold;
+        }
+
+        input[type="number"],
+        select {
+            width: 100%;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            font-size: 15px;
+        }
+
+        input[type="submit"] {
+            width: 100%;
+            padding: 12px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            font-size: 16px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-top: 20px;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+
+        .result {
+            margin-top: 30px;
+            text-align: center;
+            font-size: 22px;
+            color: #333;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Credit Limit Recommendation System</h1>
+
+        <form action="{{ url_for('predict_datapoint') }}" method="post">
+            <h2>Enter Customer Details</h2>
+
+            <div class="form-group">
+                <label>Age</label>
+                <input type="number" name="age" placeholder="Enter Age" min="18" required>
+            </div>
+
+            <div class="form-group">
+                <label>Monthly Income</label>
+                <input type="number" name="monthly_income" placeholder="Enter Monthly Income" min="0" required>
+            </div>
+
+            <div class="form-group">
+                <label>Employment Type</label>
+                <select name="employment_type" required>
+                    <option selected disabled value="">Select Employment Type</option>
+                    <option value="Salaried">Salaried</option>
+                    <option value="Self-Employed">Self-Employed</option>
+                    <option value="Unemployed">Unemployed</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Credit Score</label>
+                <input type="number" name="credit_score" placeholder="Enter Credit Score" min="0" max="850" step="0.01" required>
+            </div>
+
+            <div class="form-group">
+                <label>Existing Credit Cards</label>
+                <input type="number" name="existing_credit_cards" placeholder="Enter Number of Existing Credit Cards" min="0" required>
+            </div>
+
+            <div class="form-group">
+                <label>Average Monthly Spend</label>
+                <input type="number" name="avg_monthly_spend" placeholder="Enter Average Monthly Spend" min="0" required>
+            </div>
+
+            <div class="form-group">
+                <label>Repayment Ratio</label>
+                <input type="number" name="repayment_ratio" placeholder="Enter Repayment Ratio" min="0" max="1" step="0.01" required>
+            </div>
+
+            <div class="form-group">
+                <label>Missed Payments in Last 6 Months</label>
+                <input type="number" name="missed_payments_last_6m" placeholder="Enter Number of Missed Payments" min="0" required>
+            </div>
+
+            <div class="form-group">
+                <label>Loan Accounts</label>
+                <input type="number" name="loan_accounts" placeholder="Enter Number of Loan Accounts" min="0" required>
+            </div>
+
+            <div class="form-group">
+                <label>Location Tier</label>
+                <select name="location_tier" required>
+                    <option selected disabled value="">Select Location Tier</option>
+                    <option value="Tier 1">Tier 1</option>
+                    <option value="Tier 2">Tier 2</option>
+                    <option value="Tier 3">Tier 3</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Spend to Income Ratio</label>
+                <input type="number" name="spend_to_income_ratio" placeholder="Enter Spend to Income Ratio" min="0" max="1" step="0.01" required>
+            </div>
+
+            <div class="form-group">
+                <label>Missed Payment Flag</label>
+                <select name="missed_payment_flag" required>
+                    <option selected disabled value="">Select Missed Payment Status</option>
+                    <option value="0">No Missed Payments</option>
+                    <option value="1">Missed Payments</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Credit Category</label>
+                <select name="credit_category" required>
+                    <option selected disabled value="">Select Credit Category</option>
+                    <option value="Poor">Poor</option>
+                    <option value="Fair">Fair</option>
+                    <option value="Good">Good</option>
+                    <option value="Excellent">Excellent</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Income Category</label>
+                <select name="income_category" required>
+                    <option selected disabled value="">Select Income Category</option>
+                    <option value="Low">Low</option>
+                    <option value="Medium">Medium</option>
+                    <option value="High">High</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Age Bucket</label>
+                <select name="age_bucket" required>
+                    <option selected disabled value="">Select Age Bucket</option>
+                    <option value="18-25">18-25</option>
+                    <option value="26-35">26-35</option>
+                    <option value="36-45">36-45</option>
+                    <option value="46-55">46-55</option>
+                    <option value="56+">56+</option>
+                </select>
+            </div>
+
+            <input type="submit" value="Predict Recommended Credit Limit">
+        </form>
+
+        {% if results %}
+            <div class="result">
+                <h2>The prediction is:</h2>
+                <p><strong>{{ results }}</strong></p>
+            </div>
+        {% endif %}
+    </div>
+</body>
+</html>
